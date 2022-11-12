@@ -1,0 +1,126 @@
+CREATE EXTERNAL DATA SOURCE flightdata_blob
+WITH (TYPE = BLOB_STORAGE, 
+LOCATION = 'https://introdatamanagement.blob.core.windows.net/flightdata'
+);
+
+
+CREATE TABLE FLIGHTS (fid int,
+          month_id int,        -- 1-12
+          day_of_month int,    -- 1-31
+          day_of_week_id int,  -- 1-7, 1 = Monday, 2 = Tuesday, etc
+          carrier_id varchar(7),
+          flight_num int,
+          origin_city varchar(34),
+          origin_state varchar(47),
+          dest_city varchar(34),
+          dest_state varchar(46),
+          departure_delay int, -- in mins
+          taxi_out int,        -- in mins
+          arrival_delay int,   -- in mins
+          canceled int,        -- 1 means canceled
+          actual_time int,     -- in mins
+          distance int,        -- in miles
+          capacity int,
+          price int            -- in $
+          PRIMARY KEY(fid)
+          );
+
+CREATE TABLE CARRIERS (cid varchar(7),
+                       name varchar(83),
+                       PRIMARY KEY(cid));
+
+CREATE TABLE MONTHS (mid int,
+                     month varchar(9),
+                     PRIMARY KEY(mid));
+
+CREATE TABLE WEEKDAYS (did int,
+                       day_of_week varchar(9),
+                       PRIMARY KEY(did));
+
+
+bulk insert Carriers from 'carriers.csv'
+with (ROWTERMINATOR = '0x0a',
+DATA_SOURCE = 'flightdata_blob', FORMAT='CSV', CODEPAGE = 65001, --UTF-8 encoding
+FIRSTROW=1,TABLOCK);
+
+bulk insert Months from 'months.csv'
+with (ROWTERMINATOR = '0x0a',
+DATA_SOURCE = 'flightdata_blob', FORMAT='CSV', CODEPAGE = 65001, --UTF-8 encoding
+FIRSTROW=1,TABLOCK);
+
+bulk insert Weekdays from 'weekdays.csv'
+with (ROWTERMINATOR = '0x0a',
+DATA_SOURCE = 'flightdata_blob', FORMAT='CSV', CODEPAGE = 65001, --UTF-8 encoding
+FIRSTROW=1,TABLOCK);
+
+-- Import for the large Flights table.
+-- This last import might take a little under 10 minutes on the
+-- provided server settings
+bulk insert Flights from 'flights-small.csv'
+with (ROWTERMINATOR = '0x0a',
+DATA_SOURCE = 'flightdata_blob', FORMAT='CSV', CODEPAGE = 65001, --UTF-8 encoding
+FIRSTROW=1,TABLOCK);
+
+
+-- Indexes, which we’ll discuss later this quarter, will make your
+-- homework queries run much faster (optional, but STRONGLY recommended).
+-- In aggregate, these three statements will take about 10 minutes
+create index Flights_idx1 on Flights(origin_city,dest_city,actual_time);
+create index Flights_idx2 on Flights(actual_time);
+create index Flights_idx3 on Flights(dest_city,origin_city,actual_time);
+
+
+
+SELECT COUNT(*) FROM CARRIERS;
+
+/* Q1 */
+SELECT DISTINCT F.origin_city, F.dest_city, F.actual_time AS time
+FROM FLIGHTS AS F
+JOIN (SELECT origin_city, MAX(actual_time) as max_time
+FROM FLIGHTS
+GROUP BY origin_city) AS C
+ON F.origin_city = C.origin_city
+AND F.actual_time = C.max_time
+ORDER BY F.origin_city ASC, F.dest_city ASC;
+
+
+/* Q2 */
+SELECT DISTINCT F.origin_city AS city
+FROM FLIGHTS AS F
+JOIN (SELECT origin_city, MAX(actual_time) as max_time
+FROM FLIGHTS
+GROUP BY origin_city) AS C
+ON F.origin_city = C.origin_city AND
+F.actual_time = C.max_time
+WHERE F.canceled = 0 AND 
+F.actual_time < 180
+ORDER BY F.origin_city ASC;
+
+
+/*  Q5 */
+
+select c.dest_city from 
+(select dest_city 
+from Flights 
+where dest_city != 'Seattle WA' 
+AND origin_city != 'Seattle WA') as c
+
+where c.dest_city NOT IN 
+(select g.dest_city 
+from Flights as f
+JOIN Flights as g 
+ON f.dest_city = g.origin_city 
+OR f.dest_city = c.dest_city
+where f.origin_city = 'Seattle WA')
+group by c.dest_city
+order by c.dest_city;
+	  
+/*results: */
+dest_city
+Devils Lake ND
+Hattiesburg/Laurel MS
+St. Augustine FL
+
+
+Failed to execute query. Error: A severe error occurred on the current command.  The results, if any, should be discarded.
+Operation cancelled by user.
