@@ -1,0 +1,31 @@
+USE geoindex;
+
+SELECT DISTINCT y1.name AS first_country, y2.name AS second_country
+FROM country AS y1, country AS y2
+LET mm = (SELECT m.name AS mountain
+          FROM mountain m,
+          split(m.`-country`, " ") AS m1, split(m.`-country`, " ") AS m2
+          WHERE m1 = y1.`-car_code`
+                AND m2 = y2.`-car_code`),
+    ss = (SELECT s.name AS sea
+          FROM sea AS s,
+          split(s.`-country`, " ") AS s1, split(s.`-country`, " ") AS s2
+          WHERE s1 = y1.`-car_code`
+                AND s2 = y2.`-car_code`)
+WHERE y1.name > y2.name
+      AND array_count(mm) > 0
+      AND array_count(ss) > 0;
+
+
+/*
+7 rows
+Duration of all jobs: 1.392 sec
+
+{ "first_country": "Chile", "second_country": "Argentina" }
+{ "first_country": "Italy", "second_country": "France" }
+{ "first_country": "North Korea", "second_country": "China" }
+{ "first_country": "Russia", "second_country": "Georgia" }
+{ "first_country": "Spain", "second_country": "France" }
+{ "first_country": "Sweden", "second_country": "Norway" }
+{ "first_country": "United States", "second_country": "Canada" }
+*/

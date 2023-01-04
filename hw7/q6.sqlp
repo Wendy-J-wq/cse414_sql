@@ -1,0 +1,20 @@
+Use geo;
+
+SELECT y.`-car_code` AS country_code, y.name AS country_name, m AS mountains
+FROM world AS x, x.mondial.country AS y
+LET m = (SELECT z.`name` AS mountain, int(z.height) AS height
+         FROM world as xx, xx.mondial.mountain AS z
+         WHERE y.`-country` = z.`-car_code`)
+ORDER BY array_count(m) DESC;
+
+/*
+238 rows
+Duration of all jobs: 2.354 sec
+
+{ "mountains": [ { "height": 4214, "mountain": "Mauna Kea" }, { "height": 4170, "mountain": "Mauna Loa" }, { "height": 3055, "mountain": "Haleakala" }, { "height": 3108, "mountain": "Mt Redoubt" }, { "height": 6193, "mountain": "Mt McKinley" }, { "height": 4996, "mountain": "Mt Blackburn" }, { "height": 5005, "mountain": "Mt Bona" }, { "height": 5489, "mountain": "Mt St.Elias" }, { "height": 4663, "mountain": "Mt Fairweather" }, { "height": 3901, "mountain": "Granite Peak" }, { "height": 3859, "mountain": "Borah Peak" }, { "height": 2207, "mountain": "Harney Peak" }, { "height": 4207, "mountain": "Gannett Peak" }, { "height": 4123, "mountain": "Kings Peak" }, { "height": 4401, "mountain": "Mt Elbert" }, { "height": 4302, "mountain": "Pikes Peak" }, { "height": 4011, "mountain": "Wheeler Peak" }, { "height": 3850, "mountain": "Humphreys Peak" }, { "height": 2667, "mountain": "Guadalupe Peak" }, { "height": 4392, "mountain": "Mt Rainier" }, { "height": 3743, "mountain": "Mt Adams" }, { "height": 3424, "mountain": "Mt Hood" }, { "height": 4418, "mountain": "Mt Whitney" }, { "height": 4006, "mountain": "Boundary Peak" }, { "height": 1917, "mountain": "Mt Washington" }, { "height": 1629, "mountain": "Mt Marcy" }, { "height": 2037, "mountain": "Mt Mitchell" }, { "height": 2025, "mountain": "Clingmans Dome" } ], "country_code": "USA", "country_name": "United States" }
+{ "mountains": [ { "height": 7439, "mountain": "Pik Pobeda" }, { "height": 8611, "mountain": "K2" }, { "height": 8034, "mountain": "Gasherbrum II" }, { "height": 8080, "mountain": "Gasherbrum I" }, { "height": 8051, "mountain": "Broad Peak" }, { "height": 8027, "mountain": "Shishapangma" }, { "height": 6714, "mountain": "Kailash" }, { "height": 8188, "mountain": "Cho Oyu" }, { "height": 8848, "mountain": "Mount Everest" }, { "height": 8516, "mountain": "Lhotse" }, { "height": 8485, "mountain": "Makalu" }, { "height": 2744, "mountain": "Changbai Shan" } ], "country_code": "TJ", "country_name": "China" }
+{ "mountains": [ { "height": 3466, "mountain": "Leuser" }, { "height": 3805, "mountain": "Kerinci" }, { "height": 813, "mountain": "Krakatau" }, { "height": 2914, "mountain": "Merapi" }, { "height": 3676, "mountain": "Semeru" }, { "height": 3142, "mountain": "Gunung Agung" }, { "height": 3726, "mountain": "Rinjani" }, { "height": 2850, "mountain": "Tambora" }, { "height": 3455, "mountain": "Rantekombola" }, { "height": 3027, "mountain": "Gunung Binaiya" }, { "height": 4884, "mountain": "Puncak Jaya" } ], "country_code": "RI", "country_name": "Indonesia" }
+{ "mountains": [ { "height": 4808, "mountain": "Mont Blanc" }, { "height": 4478, "mountain": "Matterhorn" }, { "height": 4634, "mountain": "Monte Rosa" }, { "height": 4061, "mountain": "GranParadiso" }, { "height": 4048, "mountain": "Piz Bernina" }, { "height": 3343, "mountain": "Marmolata" }, { "height": 2912, "mountain": "Gran Sasso" }, { "height": 1654, "mountain": "Monte Falterona" }, { "height": 1281, "mountain": "Vesuv" }, { "height": 3323, "mountain": "Etna" } ], "country_code": "I", "country_name": "Italy" }
+{ "mountains": [ { "height": 5005, "mountain": "Mt Bona" }, { "height": 5489, "mountain": "Mt St.Elias" }, { "height": 5959, "mountain": "Mt Logan" }, { "height": 4663, "mountain": "Mt Fairweather" }, { "height": 4019, "mountain": "Mt Waddington" }, { "height": 3954, "mountain": "Mt Robson" }, { "height": 3747, "mountain": "Mt Columbia" }, { "height": 2616, "mountain": "Barbeau Peak" }, { "height": 2147, "mountain": "Mt. Odin" }, { "height": 952, "mountain": "Mt. Babel" } ], "country_code": "CDN", "country_name": "Canada" }
+
+*/

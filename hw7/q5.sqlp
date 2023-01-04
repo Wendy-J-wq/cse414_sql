@@ -1,0 +1,25 @@
+USE geo;
+
+SELECT y.name AS mountain, int(y.height) AS height,
+       z.`-car_code` AS country_code, z.name AS country_name
+FROM world AS x, x.mondial.mountain AS y,
+     split(y.`-country`, ' ') AS c, x.mondial.country AS z
+WHERE c = z.`-car_code`
+ORDER BY int(y.`height`) DESC;
+
+/*
+272 rows
+Duration of all jobs: 21.694 sec
+
+{ "height": 8848, "mountain": "Mount Everest", "country_code": "TJ", "country_name": "China" }
+{ "height": 8848, "mountain": "Mount Everest", "country_code": "NEP", "country_name": "Nepal" }
+{ "height": 8611, "mountain": "K2", "country_code": "PK", "country_name": "Pakistan" }
+{ "height": 8611, "mountain": "K2", "country_code": "TJ", "country_name": "China" }
+{ "height": 8586, "mountain": "Kangchendzonga", "country_code": "NEP", "country_name": "Nepal" }
+{ "height": 8586, "mountain": "Kangchendzonga", "country_code": "IND", "country_name": "India" }
+{ "height": 8516, "mountain": "Lhotse", "country_code": "TJ", "country_name": "China" }
+{ "height": 8516, "mountain": "Lhotse", "country_code": "NEP", "country_name": "Nepal" }
+{ "height": 8485, "mountain": "Makalu", "country_code": "TJ", "country_name": "China" }
+{ "height": 8485, "mountain": "Makalu", "country_code": "NEP", "country_name": "Nepal" }
+
+*/

@@ -1,0 +1,27 @@
+Use geo;
+
+SELECT y.name AS country,
+       y.population AS population,
+       COUNT(u) AS num_religions
+FROM world AS x, x.mondial.country AS y,
+     (CASE WHEN is_array(y.religions) THEN y.religions
+     ELSE [y.religions] END) u
+GROUP BY y.name, y.population
+ORDER BY y.name;
+
+/*
+238 rows
+Duration of all jobs: 0.658 sec
+
+{ "num_religions": 1, "country": "Afghanistan", "population": "22664136" }
+{ "num_religions": 3, "country": "Albania", "population": "3249136" }
+{ "num_religions": 3, "country": "Algeria", "population": "29183032" }
+{ "num_religions": 3, "country": "American Samoa", "population": "65628" }
+{ "num_religions": 1, "country": "Andorra", "population": "72766" }
+{ "num_religions": 2, "country": "Angola", "population": "10342899" }
+{ "num_religions": 4, "country": "Anguilla", "population": "14436" }
+{ "num_religions": 0, "country": "Antigua and Barbuda", "population": "65647" }
+{ "num_religions": 3, "country": "Argentina", "population": "34672997" }
+{ "num_religions": 1, "country": "Armenia", "population": "3463574" }
+
+*/

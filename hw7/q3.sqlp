@@ -1,0 +1,25 @@
+Use geo;
+
+SELECT u.`#text` AS religion, COUNT(y.name) as num_countries
+FROM world AS x, x.mondial.country AS y,
+     (CASE WHEN is_array(y.religions) THEN y.religions
+     ELSE [y.religions] END) u
+GROUP BY u.`#text`
+HAVING u.`#text` IS NOT NULL
+ORDER BY [COUNT(y.name)] DESC;
+
+/*
+37 rows
+Duration of all jobs: 1.093 sec
+
+{ "num_countries": 104, "religion": "Roman Catholic" }
+{ "num_countries": 98, "religion": "Muslim" }
+{ "num_countries": 67, "religion": "Protestant" }
+{ "num_countries": 57, "religion": "Christian" }
+{ "num_countries": 22, "religion": "Christian Orthodox" }
+{ "num_countries": 16, "religion": "Anglican" }
+{ "num_countries": 15, "religion": "Buddhist" }
+{ "num_countries": 14, "religion": "Hindu" }
+{ "num_countries": 13, "religion": "Jewish" }
+{ "num_countries": 7, "religion": "Seventh-Day Adventist" }
+*/

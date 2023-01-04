@@ -1,0 +1,21 @@
+Use geo;
+
+SELECT y.name AS country_name, y.`-car_code` AS country_code, s AS seas
+FROM world AS x, x.mondial.country AS y
+LET s = (SELECT z.name AS sea
+         FROM world AS x, x.mondial.sea AS z, split(z.`-country`," ") AS c
+         WHERE c = y.`-car_code`)
+WHERE array_count(s) >= 2
+ORDER BY array_count(seas) DESC;
+
+/*
+74 rows
+Duration of all jobs: 2.768 sec
+
+{ "seas": [ { "sea": "Black Sea" }, { "sea": "Sea of Azov" }, { "sea": "Baltic Sea" }, { "sea": "Barents Sea" }, { "sea": "Sibirian Sea" }, { "sea": "Arctic Ocean" }, { "sea": "Bering Sea" }, { "sea": "Pacific Ocean" }, { "sea": "Sea of Okhotsk" }, { "sea": "Sea of Japan" } ], "country_name": "Russia", "country_code": "R" }
+{ "seas": [ { "sea": "Pacific Ocean" }, { "sea": "South China Sea" }, { "sea": "Indian Ocean" }, { "sea": "Andaman Sea" }, { "sea": "Malakka Strait" }, { "sea": "Sunda Sea" }, { "sea": "Sulawesi Sea" } ], "country_name": "Indonesia", "country_code": "RI" }
+{ "seas": [ { "sea": "North Sea" }, { "sea": "The Channel" }, { "sea": "Atlantic Ocean" }, { "sea": "Norwegian Sea" }, { "sea": "Irish Sea" } ], "country_name": "United Kingdom", "country_code": "GB" }
+{ "seas": [ { "sea": "Atlantic Ocean" }, { "sea": "Gulf of Mexico" }, { "sea": "Arctic Ocean" }, { "sea": "Bering Sea" }, { "sea": "Pacific Ocean" } ], "country_name": "United States", "country_code": "USA" }
+{ "seas": [ { "sea": "North Sea" }, { "sea": "The Channel" }, { "sea": "Atlantic Ocean" }, { "sea": "Mediterranean Sea" } ], "country_name": "France", "country_code": "F" }
+
+*/

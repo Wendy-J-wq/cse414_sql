@@ -1,0 +1,26 @@
+Use geo;
+
+SELECT u.`#text` AS ethnicgroups, COUNT(*) AS num_countries,
+       SUM(float(u.`-percentage`) * int(y.population)) AS total_population
+FROM world AS x, x.mondial.country AS y,
+     (CASE WHEN is_array(y.ethnicgroups) then y.ethnicgroups ELSE [y.ethnicgroups] END) u
+WHERE y.ethnicgroups IS NOT MISSING
+GROUP BY u.`#text`
+ORDER BY total_population DESC;
+
+/*
+262 rows
+Duration of all jobs: 1.421 sec
+
+{ "num_countries": 1, "total_population": 1.11199461376E11, "ethnicgroups": "Han Chinese" }
+{ "num_countries": 1, "total_population": 6.8551753728E10, "ethnicgroups": "Indo-Aryan" }
+{ "num_countries": 1, "total_population": 2.3802691584E10, "ethnicgroups": "Dravidian" }
+{ "num_countries": 20, "total_population": 2.3688641871E10, "ethnicgroups": "African" }
+{ "num_countries": 17, "total_population": 1.4594863915375E10, "ethnicgroups": "Russian" }
+{ "num_countries": 1, "total_population": 1.2469700608E10, "ethnicgroups": "Japanese" }
+{ "num_countries": 1, "total_population": 1.206015488E10, "ethnicgroups": "Bengali" }
+{ "num_countries": 6, "total_population": 9.910143004E9, "ethnicgroups": "Malay" }
+{ "num_countries": 2, "total_population": 9.3041988595E9, "ethnicgroups": "Javanese" }
+{ "num_countries": 9, "total_population": 8.9227759551875E9, "ethnicgroups": "German" }
+
+*/

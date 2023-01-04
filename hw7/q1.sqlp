@@ -1,0 +1,24 @@
+Use geo;
+
+SELECT u.name AS city
+FROM world AS x, x.mondial.country as y,  y.province AS z,
+ 	   (CASE WHEN is_array(z.city) THEN z.city
+	   ELSE [z.city] END) u
+WHERE y.name = 'Peru'
+ORDER BY u.name ASC;
+
+/*
+30 rows
+Duration of all jobs: 0.385 sec
+
+{ "city": "Abancay" }
+{ "city": "Arequipa" }
+{ "city": "Ayacucho" }
+{ "city": "Cajamarca" }
+{ "city": "Callao" }
+{ "city": "Cerro de Pasco" }
+{ "city": "Chachapoyas" }
+{ "city": "Chiclayo" }
+{ "city": "Chimbote" }
+{ "city": "Chincha Alta" }
+*/

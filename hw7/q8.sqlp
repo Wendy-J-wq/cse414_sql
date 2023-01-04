@@ -1,0 +1,22 @@
+Use geo;
+
+SELECT y.`-car_code` AS country_code, y.name AS country_name, y.`-area` AS area
+FROM world AS x, x.mondial.country AS y
+LET seas = (SELECT z.name as s
+           FROM world AS x2, x2.mondial.sea z, split(z.`-country`, ' ') AS c
+           WHERE c = y.`-car_code`)
+WHERE array_count(seas) = 0
+ORDER BY y.`-area` DESC;
+
+
+/*
+45 rows
+Duration of all jobs: 2.932 sec
+
+{ "country_code": "H", "country_name": "Hungary", "area": "93030" }
+{ "country_code": "AZ", "country_name": "Azerbaijan", "area": "86600" }
+{ "country_code": "A", "country_name": "Austria", "area": "83850" }
+{ "country_code": "CZ", "country_name": "Czech Republic", "area": "78703" }
+{ "country_code": "SRB", "country_name": "Serbia", "area": "77474" }
+
+*/
